@@ -1,0 +1,72 @@
+A simple C++ interface to NASA's SRTM Elevation data. This code will only run on
+a Unix operating system.
+
+You can read about this data here:
+  http://www2.jpl.nasa.gov/srtm/
+
+You can download the data by FTP from:
+  ftp://e0srp01u.ecs.nasa.gov/srtm/version2/SRTM3
+  ftp://e0srp01u.ecs.nasa.gov/srtm/version2/SRTM1
+
+SRTM3 is ready to use, and covers the whole world. SRTM1 has 3 times the
+resolution of SRTM3, but it only covers North America, and the file naming
+scheme is somewhat haphazard, so you'll need to manually rename some of the
+files before you can use them.
+
+
+INSTRUCTIONS
+
+1. Get the data  files
+----------------------
+
+Set the environment variable ROOT_PATH to tell the code where to find the data
+files. (You can also set the C++ macro ROOT_PATH, to the same effect.)
+
+Create a directory called $ROOT_PATH/data.
+
+Download the datafiles you require, and place them into your new directory.
+Unzip them. You don't need to get all of the files. Any missing files will be
+skipped, and the software will tell you that those areas have "NO_DATA".
+
+The file names should follow NASA's 'SRTM3' naming scheme. The case is
+IMPORTANT. Here are examples of valid file names...
+
+ N43E004.hgt
+ S10W139.hgt
+
+
+2. Write your code
+------------------
+
+The interface is quite simple. Construct a Grid object, and call its height()
+method to get the height above mean sea level for a given lat/long coordinate.
+Here's a very simple example.
+
+ #include "grid.h"
+ #include "nasagridsquare.h"
+
+ int main() [
+   float lat,lng;
+   cin >> lat >> lng;
+   Grid<NasaGridSquare> g();
+   cout << g.height(lng,lat) << endl;
+   return 0;
+ }
+
+The Grid class caches the most recently used 360 data files in memory, in order
+to improve performance. If you have less than a Gigabyte of memory, you might
+need to reduce this number. (Of course, if you have much more memory, you could
+increase the limit.)
+
+Set the cache limit like this:
+
+  Grid<NasaGridSquare>::cache_limit = 100;
+
+
+3. Publish your source code.
+----------------------------
+
+This software is licensed under the GPL. If you wish to redistribute it, then
+remember to comply with the terms.
+
+-Alex Tingle (alex.nasagrid AT firetree.net)
